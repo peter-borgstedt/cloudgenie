@@ -1,0 +1,46 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "baseUrl": ".",
+        "rootDir": ".",
+        "target": "es2015",
+        "module": "commonjs",
+        "outDir": "./dist",
+        "declaration": false,
+        "experimentalDecorators": true,
+        "strict": false,
+        "suppressImplicitAnyIndexErrors": true,
+        "suppressExcessPropertyErrors": true,
+        "noUnusedLocals": false,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "paths": {
+            "@actions": ["src/actions"],
+            "@actions/*": ["src/actions/*"],
+            "@common": ["src/common"],
+            "@common/*": ["src/common/*"],
+            "@services": ["src/services"],
+            "@services/*": ["src/services/*"],
+            "@assets": ["src/assets"],
+            "@assets/*": ["src/assets/*"]
+        },
+        "typeRoots": [
+            "node_modules/@types",
+            "types"
+        ]
+    },
+    "include": [
+        "src/**/*.ts",
+        "types/*.d.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "test/**/*"
+    ],
+    "lib": [
+        "es2017",
+        "dom",
+        "esnext"
+    ]
+}

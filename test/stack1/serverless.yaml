@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: POS Orderin Integration.
+
+Parameters:
+  ENVIRONMENT:
+    Type: String
+  SERVICE:
+    Type: String
+
+Globals:
+  Function:
+    Runtime: nodejs10.x
+    MemorySize: 128
+    Timeout: 300
+    Handler: index.handler
+
+Resources:
+  TestLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: "lambda.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: dynamo
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                - dynamodb:*
+              Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${SERVICE}-configuration
+        - PolicyName: sqs
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                - sqs:*
+              Resource: !Sub arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:${SERVICE}
+
+  TestLambda:
+    Type: AWS::Serverless::Function
+    DependsOn:
+      - TestLambdaRole
+    Properties:
+      FunctionName: !Sub ${SERVICE}-lambda
+      CodeUri: ./src
+      Role: !GetAtt TestLambdaRole.Arn
+      ReservedConcurrentExecutions: 1
+      Environment:
+        Variables:
+          ENVIRONMENT: !Sub ${ENVIRONMENT}
+
+  TestLambdaLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${SERVICE}-lambda'
+ 
+  TestLambdaLogSubscriptionFilter:
+    Type: AWS::Logs::SubscriptionFilter
+    DependsOn:
+      - TestLambdaLogGroup
+    Properties:
+      DestinationArn: arn:aws:logs:eu-west-1:494090316628:destination:overwatch-v1
+      FilterPattern: "[time, uuid, app=overwatch*, metric]"
+      LogGroupName: !Sub '/aws/lambda/${SERVICE}-lambda'

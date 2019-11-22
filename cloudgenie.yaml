@@ -1,0 +1,23 @@
+environments: &global_environments
+#  ENVIRONMENT: dev
+  SERVICE: cloudgenie-test
+
+tags: &global_tags
+  TEAM: BEAM
+
+settings:
+  region: eu-west-1
+  profile: dw-dev
+
+stacks:
+  serverless:
+    name: cloudgenie-test-serverless
+    bucket: dw-artifactory-dev
+    bucketPrefix: cloudgenie-test-serverless
+    parameters:
+      <<: *global_environments
+    tags:
+      <<: *global_tags
+    resources:
+      - ./test/stack1/dynamodb.yaml
+      # - ./test/stack1/serverless.yaml

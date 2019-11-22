@@ -1,0 +1,54 @@
+image: enfogroupcloud/node-aws-cli:latest
+
+pipelines:
+  default:
+    - step:
+        name: Build and test
+        caches:
+          - npm
+        script:
+          - npm install
+          - npm audit
+          - npm run lint
+
+  custom:
+    production:
+      - step:
+          caches:
+            - node
+          script:
+            - npm install
+            - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+            - npm run deploy:prod
+
+    pre-production:
+      - step:
+          caches:
+            - node
+          script:
+            - npm install
+            - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+            - npm run deploy:preprod
+
+    test:
+      - step:
+          caches:
+            - node
+          script:
+            - npm install
+            - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+            - npm run deploy
+
+  branches:
+    release/*: # Automatically build release branches to production
+      - step:
+          caches:
+            - npm
+          script:
+            - npm install
+            - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+            - npm run deploy:prod
+
+definitions:
+  caches:
+    npm: $HOME/.npm
