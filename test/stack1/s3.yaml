@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudGenie S3 Bucket test stack
+
+Parameters:
+  SERVICE:
+    Type: String
+
+Resources:
+  MyS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${SERVICE}-bucket
+      AccessControl: Private

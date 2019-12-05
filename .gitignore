@@ -19,8 +19,8 @@ jspm_packages
 /node_modules
 
 # IDEs and editors
-/.idea
-/.history
+.idea
+.history
 .project
 .classpath
 .c9/

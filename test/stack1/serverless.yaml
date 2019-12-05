@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: POS Orderin Integration.
+Description: CloudGenie Lambda Function test stackk
 
 Parameters:
   ENVIRONMENT:
@@ -37,13 +37,6 @@ Resources:
               Action:
                 - dynamodb:*
               Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${SERVICE}-configuration
-        - PolicyName: sqs
-          PolicyDocument:
-            Statement:
-              Effect: Allow
-              Action:
-                - sqs:*
-              Resource: !Sub arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:${SERVICE}
 
   TestLambda:
     Type: AWS::Serverless::Function
@@ -61,13 +54,4 @@ Resources:
   TestLambdaLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub '/aws/lambda/${SERVICE}-lambda'
- 
-  TestLambdaLogSubscriptionFilter:
-    Type: AWS::Logs::SubscriptionFilter
-    DependsOn:
-      - TestLambdaLogGroup
-    Properties:
-      DestinationArn: arn:aws:logs:eu-west-1:494090316628:destination:overwatch-v1
-      FilterPattern: "[time, uuid, app=overwatch*, metric]"
       LogGroupName: !Sub '/aws/lambda/${SERVICE}-lambda'

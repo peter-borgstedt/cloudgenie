@@ -10,6 +10,13 @@ declare global {
         resources: string[];
       }
 
+      interface StackParameters {
+        name: string;
+        template: { obj: object; str: string };
+        parameters: AWS.CloudFormation.Parameter[];
+        tags: AWS.CloudFormation.Tag[];
+      }
+
       interface Settings {
         region: string;
         profile: string;

@@ -1,5 +1,5 @@
 environments: &global_environments
-#  ENVIRONMENT: dev
+  ENVIRONMENT: dev
   SERVICE: cloudgenie-test
 
 tags: &global_tags
@@ -10,14 +10,25 @@ settings:
   profile: marvin-test
 
 stacks:
+  persistent:
+    name: cloudgenie-test-persistent
+    parameters:
+      SERVICE: cloudgenie-test
+    tags:
+      <<: *global_tags
+    resources:
+      - ./test/stack1/s3.yaml
+      - ./test/stack1/dynamodb.yaml
+
   serverless:
     name: cloudgenie-test-serverless
-    bucket: dw-artifactory-dev
-    bucketPrefix: cloudgenie-test-serverless
+    package:
+      output: dist
+      bucket: cloudgenie-test-bucket
+      bucketPrefix: cloudgenie-test-serverless
     parameters:
       <<: *global_environments
     tags:
       <<: *global_tags
     resources:
-      - ./test/stack1/dynamodb.yaml
-      # - ./test/stack1/serverless.yaml
+      - ./test/stack1/serverless.yaml

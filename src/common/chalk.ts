@@ -1,10 +1,6 @@
-import { Chalk, ColorSupport } from 'chalk';
-import chalk from 'chalk';
+import chalk, { Chalk } from 'chalk';
 
-type ChalkObject = Chalk & { supportsColor: ColorSupport };
-interface ArbitraryColors { custom: { [key: string]: ChalkObject } }
-
-const extended = chalk as ChalkObject & ArbitraryColors;
+const extended = chalk as typeof chalk & { custom: { [key: string]: Chalk } }
 
 extended.custom = {
   grey: chalk.rgb(192, 192, 192),

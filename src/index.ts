@@ -1,7 +1,7 @@
 global['__basedir'] = __dirname; // DO NOT REMOVE FROM TOP!
 
 import * as logger from '@common/log';
-import { deploy, remove } from '@actions';
+import { deploy, packaging, remove } from '@actions';
 import actionRunner from '@common/action';
 import chalk from '@common/chalk';
 import commander from 'commander';
@@ -33,13 +33,18 @@ const main = async (): Promise<void> => {
     .description(chalk.magenta('Remove'))
     .action(actionRunner(remove));
 
+    commander
+      .command('package')
+      .description(chalk.magenta('Package'))
+      .action(actionRunner(packaging));
+
 }
 
 // Run
 (async (): Promise<void> => {
   try {
     await main();
-    if (!commander.parse(process.argv).args.length) {
+    if (commander.parse(process.argv).rawArgs.length < 3) {
       commander.help();
     }
   } catch (error) {

@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Cloudgenie Dynamodb test stack
+Description: CloudGenie DynamoDB test stack
 
 Parameters:
   SERVICE:

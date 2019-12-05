@@ -8,7 +8,7 @@ const getParams = (
     name: string;
     parameters: AWS.CloudFormation.Parameter[];
     tags: AWS.CloudFormation.Tag[];
-    template: string;
+    template: { obj: object; str: string };
   }): {
     StackName: string;
     Capabilities: string[];
@@ -26,7 +26,7 @@ const getParams = (
     ],
     Parameters: parameters,
     Tags: tags,
-    TemplateBody: template
+    TemplateBody: template.str
   };
 }
 
@@ -44,8 +44,9 @@ export const stackExists = async (cf: AWS.CloudFormation, stackName: string): Pr
 
 export const validateStack = async (cf: AWS.CloudFormation, params: CloudGenie.Types.StackParameters): Promise<void> => {
   process.stdout.write(chalk.hex('777777')(`Cloudgenie: Validating template (${chalk.hex('BBBBBB')(params.name)})`))
-  await cf.validateTemplate({ TemplateBody: params.template }).promise()
+  const result = await cf.validateTemplate({ TemplateBody: params.template.str }).promise()
   console.log(` ${chalk.green('OK!')}`)
+  console.log({ result });
 }
 
 export const createStack = async (cf: AWS.CloudFormation, params: CloudGenie.Types.StackParameters): Promise<void> => {
