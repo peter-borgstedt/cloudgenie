@@ -5,6 +5,8 @@ import { deploy, packaging, remove } from '@actions';
 import actionRunner from '@common/action';
 import chalk from '@common/chalk';
 import commander from 'commander';
+import { pack } from './common/stack/package';
+import path from 'path'
 
 const main = async (): Promise<void> => {
   const args = process.argv.slice(2);
@@ -43,11 +45,17 @@ const main = async (): Promise<void> => {
 // Run
 (async (): Promise<void> => {
   try {
+    const dir = path.join(process.cwd(), 'test', 'stack', 'src');
+    await pack(dir, 'testar')
+
+/*
     await main();
     if (commander.parse(process.argv).rawArgs.length < 3) {
       commander.help();
     }
+*/
   } catch (error) {
     logger.error(error);
   }
 })()
+
