@@ -1,5 +1,5 @@
 import deploy from './deploy';
-import packaging from './package';
+import pack from './pack';
 import remove from './remove';
 
-export { deploy, remove, packaging };
+export { deploy, remove, pack };

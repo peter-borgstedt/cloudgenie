@@ -57,14 +57,13 @@ const replacement = (yamlObj) => {
 }
 
 export const parseStackParameters = (stackParameters: CloudGenie.Types.Stack): CloudGenie.Types.StackParameters => {
-  const { name, bucket, bucketPrefix, parameters, tags, resources } = stackParameters
+  const { name, package: packageSettings, parameters, tags, resources } = stackParameters
   const yamlFiles = resources
     .map((filePath) => {
       return { filePath, data: fs.readFileSync(filePath, 'utf8')}
     });
 
   const context = {};
-
   const obj = {};
   for (const { filePath, data } of yamlFiles) {
     const yamlObj = yaml.load(data, { schema: SCHEMA })
@@ -83,24 +82,26 @@ export const parseStackParameters = (stackParameters: CloudGenie.Types.Stack): C
     }
 */
     if (Resources) {
-      for (const resource of Object.values(Resources)) {
+      for (const [ logicalID, resource ] of Object.entries(Resources)) {
         if (resource.Type) {
           const type = resource.Type.split('::').pop().toLowerCase()
-          const input = { bucket, bucketPrefix, filePath }
-          const output = context[type] || (context[type] = {})
-          parse(type, resource, input, output)
+          const input = { packageSettings, filePath }
+          const output = context[type] || (context[type] = [])
+          parse(type, logicalID, resource, input, output)
         }
       }
     }
 
     merge(obj, yamlObj);
   }
+  console.log(context)
 
   return {
     name,
     template: { obj, str: yaml.dump(obj, { schema: SCHEMA }) },
     parameters: extract(parameters, 'ParameterKey', 'ParameterValue'),
     tags: extract(tags),
-    resources
+    resources,
+    context
   }
 }

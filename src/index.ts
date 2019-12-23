@@ -1,12 +1,10 @@
 global['__basedir'] = __dirname; // DO NOT REMOVE FROM TOP!
 
 import * as logger from '@common/log';
-import { deploy, packaging, remove } from '@actions';
+import { deploy, pack, remove } from '@actions';
 import actionRunner from '@common/action';
 import chalk from '@common/chalk';
 import commander from 'commander';
-import { pack } from './common/stack/package';
-import path from 'path'
 
 const main = async (): Promise<void> => {
   const args = process.argv.slice(2);
@@ -36,24 +34,25 @@ const main = async (): Promise<void> => {
     .action(actionRunner(remove));
 
     commander
-      .command('package')
-      .description(chalk.magenta('Package'))
-      .action(actionRunner(packaging));
-
+      .command('pack')
+      .description(chalk.magenta('pack'))
+      .action(actionRunner(pack));
 }
 
 // Run
 (async (): Promise<void> => {
   try {
-    const dir = path.join(process.cwd(), 'test', 'stack', 'src');
-    await pack(dir, 'testar')
+    /*
+    const src = path.join(process.cwd(), 'test', 'stack1', 'src');
+    const dst = path.join(process.cwd(), 'dist');
+    await pack(src, dst, 'funktion')
+    */
 
-/*
     await main();
+
     if (commander.parse(process.argv).rawArgs.length < 3) {
       commander.help();
     }
-*/
   } catch (error) {
     logger.error(error);
   }

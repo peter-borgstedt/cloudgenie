@@ -1,3 +1,3 @@
 module.exports.handler = () => {
-  console.log('hello');
+  console.log('world');
 }

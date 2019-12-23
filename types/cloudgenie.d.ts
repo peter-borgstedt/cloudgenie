@@ -3,8 +3,10 @@ declare global {
     namespace Types {
       interface Stack {
         name: string;
-        bucket: string;
-        bucketPrefix?: string;
+        package: {
+          bucket: string;
+          bucketPrefix?: string;
+        };
         parameters?: { [ key: string ]: string };
         tags?: { [ key: string ]: string };
         resources: string[];
@@ -15,11 +17,13 @@ declare global {
         template: { obj: object; str: string };
         parameters: AWS.CloudFormation.Parameter[];
         tags: AWS.CloudFormation.Tag[];
+        context: { function?: [{ name?: string; codeUriSrc?: string; codeUriDst?: string }] };
       }
 
       interface Settings {
         region: string;
         profile: string;
+        output: string;
       }
     }
 

@@ -23,7 +23,6 @@ stacks:
   serverless:
     name: cloudgenie-test-serverless
     package:
-      output: dist
       bucket: cloudgenie-test-bucket
       bucketPrefix: cloudgenie-test-serverless
     parameters:
